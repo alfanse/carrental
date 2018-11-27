@@ -1,35 +1,41 @@
 package com.asos.carrental.expense.service.impl;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import com.asos.carrental.creators.VehicleDirector;
 import com.asos.carrental.expense.service.CarRentalExpenseCalculator;
 import com.asos.carrental.model.Vehicle;
-import com.asos.carrental.utils.calculators.AdditionalExpenseCalculator;
-import com.asos.carrental.utils.calculators.DiscountCalculator;
 import com.asos.carrental.utils.calculators.DistanceCalculator;
+import com.asos.carrental.utils.calculators.ExpenseCalculator;
 import com.asos.carrental.utils.calculators.RateCalculator;
 
 public class CarRentalExpenseCalculatorImpl
 		implements CarRentalExpenseCalculator {
 
-	private VehicleDirector vehicleDirector;
-	private DistanceCalculator distanceCalculator;
-	private RateCalculator rateCalculator;
-	private DiscountCalculator discountCalculator;
-	private AdditionalExpenseCalculator additionalExpenseCalculator;
+	private final VehicleDirector vehicleDirector;
+	private final DistanceCalculator distanceCalculator;
+	private final RateCalculator finalRateCalculator;
+	private final ExpenseCalculator expenseCalculator;
+
+	public CarRentalExpenseCalculatorImpl(VehicleDirector vehicleDirector,
+			DistanceCalculator distanceCalculator,
+			RateCalculator finalRateCalculator,
+			ExpenseCalculator expenseCalculator) {
+		this.vehicleDirector = vehicleDirector;
+		this.distanceCalculator = distanceCalculator;
+		this.finalRateCalculator = finalRateCalculator;
+		this.expenseCalculator = expenseCalculator;
+	}
 
 	@Override
 	public BigDecimal calculateExpense(String vehicleType, String fuelType,
 			String destination, String tripType,
 			String numberOfPeopleTravelling, String isAirConditioningRequired) {
 
-		Vehicle vehicle = vehicleDirector.buildVehicle(vehicleType, fuelType,
+		Vehicle vehicle = buildVehilcle(vehicleType, fuelType,
 				isAirConditioningRequired);
 
-		Float distance = distanceCalculator.getTotalDistance(destination,
-				tripType);
+		Float distance = calculateDistance(destination, tripType);
 
 		BigDecimal vehicleRate = calculateVehicleRate(vehicle);
 
@@ -39,26 +45,32 @@ public class CarRentalExpenseCalculatorImpl
 		return totalTripExpense;
 	}
 
-	private BigDecimal calculateTripExpnse(String numberOfPeopleTravelling,
-			Vehicle vehicle, Float distance, BigDecimal vehicleRate) {
-		BigDecimal distanceExpense = vehicleRate
-				.multiply(new BigDecimal(distance))
-				.setScale(2, RoundingMode.HALF_UP);
+	private Vehicle buildVehilcle(String vehicleType, String fuelType,
+			String isAirConditioningRequired) {
 
-		BigDecimal addedExpense = additionalExpenseCalculator
-				.calculateAdditionalExpense(vehicle, numberOfPeopleTravelling,
-						distance);
+		return vehicleDirector.buildVehicle(vehicleType, fuelType,
+				isAirConditioningRequired);
 
-		BigDecimal totalTripExpense = distanceExpense.add(addedExpense)
-				.setScale(2, RoundingMode.HALF_UP);
-		return totalTripExpense;
+	}
+
+	private Float calculateDistance(String destination, String tripType) {
+
+		return distanceCalculator.getTotalDistance(destination, tripType);
+
 	}
 
 	private BigDecimal calculateVehicleRate(Vehicle vehicle) {
-		BigDecimal standardRate = rateCalculator.calulateRate(vehicle);
-		BigDecimal discountedRate = discountCalculator
-				.calulateDiscount(standardRate, vehicle);
-		return discountedRate;
+
+		return finalRateCalculator.calulateRate(vehicle);
+
+	}
+
+	private BigDecimal calculateTripExpnse(String numberOfPeopleTravelling,
+			Vehicle vehicle, Float distance, BigDecimal vehicleRate) {
+
+		return expenseCalculator.calculateExpense(vehicle,
+				numberOfPeopleTravelling, distance, vehicleRate);
+
 	}
 
 }
