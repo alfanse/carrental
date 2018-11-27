@@ -31,7 +31,7 @@ public class DistanceCalculatorImplTest {
         String destination = "Chennai";
         String tripTypeName = "return";
         String distanceToDestination = "1234.5";
-        when(destinationRepository.getDestinationDistance(destination)).thenReturn(new Float(distanceToDestination));
+        when(destinationRepository.findDestinationDistance(destination)).thenReturn(new Float(distanceToDestination));
         //when        
         Float totalDistance = distanceCalculatorImplUnderTest.getTotalDistance(destination, tripTypeName);
         //then
@@ -46,7 +46,7 @@ public class DistanceCalculatorImplTest {
         String destination = "Kolkata";
         String tripTypeName = "single";
         String distanceToDestination = "1800";
-        when(destinationRepository.getDestinationDistance(destination)).thenReturn(new Float(distanceToDestination));
+        when(destinationRepository.findDestinationDistance(destination)).thenReturn(new Float(distanceToDestination));
         //when        
         Float totalDistance = distanceCalculatorImplUnderTest.getTotalDistance(destination, tripTypeName);
         //then

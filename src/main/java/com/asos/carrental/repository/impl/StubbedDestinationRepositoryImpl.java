@@ -18,7 +18,7 @@ public class StubbedDestinationRepositoryImpl implements DestinationRepository {
     }
 
     @Override
-    public Float getDestinationDistance(String destination) {
+    public Float findDestinationDistance(String destination) {
         return destinationDistances.get(destination);
     }
 

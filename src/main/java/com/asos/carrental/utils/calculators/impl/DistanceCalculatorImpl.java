@@ -31,7 +31,7 @@ public class DistanceCalculatorImpl implements DistanceCalculator {
     }
 
     private Float getDestinationDistance(String destination) {
-        return destinationRepository.getDestinationDistance(destination);
+        return destinationRepository.findDestinationDistance(destination);
     }
 
     private TripType fetchTripType(String tripTypeName) {

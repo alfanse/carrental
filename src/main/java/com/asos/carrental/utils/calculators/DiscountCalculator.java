@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 import com.asos.carrental.model.Vehicle;
 
-public interface RateCalculator {
+public interface DiscountCalculator {
 
-	BigDecimal calulateRate(Vehicle vehicle);
+	BigDecimal calulateDiscount(BigDecimal standardRate, Vehicle vehicle);
 
 }
