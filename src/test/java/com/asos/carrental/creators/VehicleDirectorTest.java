@@ -24,6 +24,11 @@ public class VehicleDirectorTest {
 
     VehicleDirector vehicleDirector;
 
+    protected static final String VEHICLE_BUS = "bus";
+    protected static final String FUEL_TYPE_DEISEL = "DEISEL";
+    protected static final String AC_REQUIRED = "true";
+    protected static final VehicleType VEHICLE_TYPE_BUS = VehicleType.BUS;
+
     @Before
     public void setup() {
         vehicleDirector = new VehicleDirector(vehicleRepository);
@@ -34,18 +39,10 @@ public class VehicleDirectorTest {
     public void shouldBuildVehilcleWithFuelType() {
 
         //given
-        String vehicleTypeName = "bus";
-        String fuelType = "DEISEL";
-        String isAirConditioningRequired = "true";
-        VehicleType vehicleType = VehicleType.BUS;
-        when(vehicleRepository.fectchAirCoditioningAvailibity(vehicleType, isAirConditioningRequired))
-                .thenReturn(new Boolean(true));
-        when(vehicleRepository.fetchFuelType(vehicleType, fuelType)).thenReturn(FuelType.DEISEL);
-        when(vehicleRepository.fetchVehiclePassengerCapacity(vehicleType)).thenReturn(20);
-        when(vehicleRepository.fetchVehicleSize(vehicleType)).thenReturn(VehicleSize.LARGE);
+        givenABus();
 
         //when
-        Vehicle builtVehicle = vehicleDirector.buildVehicle(vehicleTypeName, fuelType, isAirConditioningRequired);
+        Vehicle builtVehicle = vehicleDirector.buildVehicle(VEHICLE_BUS, FUEL_TYPE_DEISEL, AC_REQUIRED);
 
         //then
         assertThat(builtVehicle.getFuelType(), equalTo(FuelType.DEISEL));
@@ -56,18 +53,10 @@ public class VehicleDirectorTest {
     public void shouldBuildVehilcleWithAirCon() {
 
         //given
-        String vehicleTypeName = "bus";
-        String fuelType = "DEISEL";
-        String isAirConditioningRequired = "true";
-        VehicleType vehicleType = VehicleType.BUS;
-        when(vehicleRepository.fectchAirCoditioningAvailibity(vehicleType, isAirConditioningRequired))
-                .thenReturn(new Boolean(true));
-        when(vehicleRepository.fetchFuelType(vehicleType, fuelType)).thenReturn(FuelType.DEISEL);
-        when(vehicleRepository.fetchVehiclePassengerCapacity(vehicleType)).thenReturn(20);
-        when(vehicleRepository.fetchVehicleSize(vehicleType)).thenReturn(VehicleSize.LARGE);
+        givenABus();
 
         //when
-        Vehicle builtVehicle = vehicleDirector.buildVehicle(vehicleTypeName, fuelType, isAirConditioningRequired);
+        Vehicle builtVehicle = vehicleDirector.buildVehicle(VEHICLE_BUS, FUEL_TYPE_DEISEL, AC_REQUIRED);
 
         //then
         assertThat(builtVehicle.getIsAirConditioned(), equalTo(true));
@@ -78,18 +67,10 @@ public class VehicleDirectorTest {
     public void shouldBuildVehilcleWithMaxPassengerCapacity() {
 
         //given
-        String vehicleTypeName = "bus";
-        String fuelType = "DEISEL";
-        String isAirConditioningRequired = "true";
-        VehicleType vehicleType = VehicleType.BUS;
-        when(vehicleRepository.fectchAirCoditioningAvailibity(vehicleType, isAirConditioningRequired))
-                .thenReturn(new Boolean(true));
-        when(vehicleRepository.fetchFuelType(vehicleType, fuelType)).thenReturn(FuelType.DEISEL);
-        when(vehicleRepository.fetchVehiclePassengerCapacity(vehicleType)).thenReturn(20);
-        when(vehicleRepository.fetchVehicleSize(vehicleType)).thenReturn(VehicleSize.LARGE);
+        givenABus();
 
         //when
-        Vehicle builtVehicle = vehicleDirector.buildVehicle(vehicleTypeName, fuelType, isAirConditioningRequired);
+        Vehicle builtVehicle = vehicleDirector.buildVehicle(VEHICLE_BUS, FUEL_TYPE_DEISEL, AC_REQUIRED);
 
         //then
         assertThat(builtVehicle.getMaxPassengerCapacity(), equalTo(20));
@@ -100,18 +81,10 @@ public class VehicleDirectorTest {
     public void shouldBuildVehilcleWithVehicleSize() {
 
         //given
-        String vehicleTypeName = "bus";
-        String fuelType = "DEISEL";
-        String isAirConditioningRequired = "true";
-        VehicleType vehicleType = VehicleType.BUS;
-        when(vehicleRepository.fectchAirCoditioningAvailibity(vehicleType, isAirConditioningRequired))
-                .thenReturn(new Boolean(true));
-        when(vehicleRepository.fetchFuelType(vehicleType, fuelType)).thenReturn(FuelType.DEISEL);
-        when(vehicleRepository.fetchVehiclePassengerCapacity(vehicleType)).thenReturn(20);
-        when(vehicleRepository.fetchVehicleSize(vehicleType)).thenReturn(VehicleSize.LARGE);
+        givenABus();
 
         //when
-        Vehicle builtVehicle = vehicleDirector.buildVehicle(vehicleTypeName, fuelType, isAirConditioningRequired);
+        Vehicle builtVehicle = vehicleDirector.buildVehicle(VEHICLE_BUS, FUEL_TYPE_DEISEL, AC_REQUIRED);
 
         //then
         assertThat(builtVehicle.getVehicleSize(), equalTo(VehicleSize.LARGE));
@@ -122,22 +95,22 @@ public class VehicleDirectorTest {
     public void shouldBuildVehilcleWithVehicleType() {
 
         //given
-        String vehicleTypeName = "bus";
-        String fuelType = "DEISEL";
-        String isAirConditioningRequired = "true";
-        VehicleType vehicleType = VehicleType.BUS;
-        when(vehicleRepository.fectchAirCoditioningAvailibity(vehicleType, isAirConditioningRequired))
-                .thenReturn(new Boolean(true));
-        when(vehicleRepository.fetchFuelType(vehicleType, fuelType)).thenReturn(FuelType.DEISEL);
-        when(vehicleRepository.fetchVehiclePassengerCapacity(vehicleType)).thenReturn(20);
-        when(vehicleRepository.fetchVehicleSize(vehicleType)).thenReturn(VehicleSize.LARGE);
+        givenABus();
 
         //when
-        Vehicle builtVehicle = vehicleDirector.buildVehicle(vehicleTypeName, fuelType, isAirConditioningRequired);
+        Vehicle builtVehicle = vehicleDirector.buildVehicle(VEHICLE_BUS, FUEL_TYPE_DEISEL, AC_REQUIRED);
 
         //then
         assertThat(builtVehicle.getVehicleType(), equalTo(VehicleType.BUS));
 
+    }
+
+    private void givenABus() {
+        when(vehicleRepository.fectchAirCoditioningAvailibity(VehicleDirectorTest.VEHICLE_TYPE_BUS, VehicleDirectorTest.AC_REQUIRED))
+                .thenReturn(new Boolean(true));
+        when(vehicleRepository.fetchFuelType(VehicleDirectorTest.VEHICLE_TYPE_BUS, VehicleDirectorTest.FUEL_TYPE_DEISEL)).thenReturn(FuelType.DEISEL);
+        when(vehicleRepository.fetchVehiclePassengerCapacity(VehicleDirectorTest.VEHICLE_TYPE_BUS)).thenReturn(20);
+        when(vehicleRepository.fetchVehicleSize(VehicleDirectorTest.VEHICLE_TYPE_BUS)).thenReturn(VehicleSize.LARGE);
     }
 
 }
