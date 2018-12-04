@@ -1,9 +1,9 @@
 package com.asos.carrental.utils.calculators;
 
+import com.asos.carrental.model.Vehicle;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
-import com.asos.carrental.model.Vehicle;
 
 public class StandardExpenseCalculatorImpl implements ExpenseCalculator {
 
@@ -16,16 +16,16 @@ public class StandardExpenseCalculatorImpl implements ExpenseCalculator {
 
 	@Override
 	public BigDecimal calculateExpense(Vehicle vehicle,
-			String numberOfPeopleTravelling, Float distance,
-			BigDecimal vehicleRate) {
+									   String numberOfPeopleTravelling,
+									   Float distance,
+									   BigDecimal vehicleRate) {
 
 		BigDecimal distanceExpense = vehicleRate
 				.multiply(new BigDecimal(distance))
 				.setScale(2, RoundingMode.HALF_UP);
 
 		BigDecimal addedExpense = additionalExpenseCalculator
-				.calculateAdditionalExpense(vehicle, numberOfPeopleTravelling,
-						distance);
+				.calculateAdditionalExpense(vehicle, numberOfPeopleTravelling, distance);
 
 		BigDecimal totalTripExpense = distanceExpense.add(addedExpense)
 				.setScale(2, RoundingMode.HALF_UP);

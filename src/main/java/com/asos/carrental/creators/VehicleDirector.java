@@ -16,18 +16,19 @@ public class VehicleDirector {
     }
 
     public Vehicle buildVehicle(String vehicleType, String fuelType, String isAirConditioningRequired) {
-
         VehicleType selectedVehicleType = TypeFetcher.getType(VehicleType.class, vehicleType);
+        return buildVehicle(selectedVehicleType, fuelType, isAirConditioningRequired);
+    }
 
+    public Vehicle buildVehicle(VehicleType vehicleType, String fuelType, String isAirConditioningRequired) {
         VehicleBuilder vehicleBuilder = new VehicleBuilder()
-                .withVehicleType(selectedVehicleType)
-                .withFuelType(fetchFuelType(selectedVehicleType, fuelType))
-                .withIsAirConditioned(fectchAirCoditioningAvailibity(selectedVehicleType, isAirConditioningRequired))
-                .withMaxPassengerCapacity(fetchMaxPassengerCapacity(selectedVehicleType))
-                .withVehicleSize(fetchVehicleSize(selectedVehicleType));
+                .withVehicleType(vehicleType)
+                .withFuelType(fetchFuelType(vehicleType, fuelType))
+                .withIsAirConditioned(fectchAirCoditioningAvailibity(vehicleType, isAirConditioningRequired))
+                .withMaxPassengerCapacity(fetchMaxPassengerCapacity(vehicleType))
+                .withVehicleSize(fetchVehicleSize(vehicleType));
 
         return vehicleBuilder.build();
-
     }
 
     private Boolean fectchAirCoditioningAvailibity(VehicleType vehicleType, String isAirConditioningRequired) {

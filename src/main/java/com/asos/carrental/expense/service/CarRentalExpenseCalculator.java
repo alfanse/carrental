@@ -17,7 +17,9 @@ public interface CarRentalExpenseCalculator {
 	 * @param isAirConditioningRequired The selected option of air condition
 	 * @return
 	 */
-	BigDecimal calculateExpense(String vehicleType, String fuelType,
-			String destination, String tripType, String numberOfPeople,
-			String isAirConditioningRequired);
-}
+	BigDecimal calculateExpense(String vehicleType,
+								String fuelType,
+								String destination,
+								String tripType,
+								String numberOfPeople,
+								String isAirConditioningRequired);}

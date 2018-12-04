@@ -35,7 +35,7 @@ public class CarRentalExpenseCalculatorImpl
 									   String numberOfPeopleTravelling,
 									   String isAirConditioningRequired) {
 
-		Vehicle vehicle = buildVehilcle(vehicleType, fuelType, isAirConditioningRequired);
+		Vehicle vehicle = buildVehicle(vehicleType, fuelType, isAirConditioningRequired);
 
 		Float distance = calculateDistance(destination, tripType);
 
@@ -44,9 +44,9 @@ public class CarRentalExpenseCalculatorImpl
 		return calculateTripExpense(numberOfPeopleTravelling, vehicle, distance, vehicleRate);
 	}
 
-	private Vehicle buildVehilcle(String vehicleType,
-								  String fuelType,
-								  String isAirConditioningRequired) {
+	private Vehicle buildVehicle(String vehicleType,
+                                 String fuelType,
+                                 String isAirConditioningRequired) {
 
 		return vehicleDirector.buildVehicle(vehicleType, fuelType, isAirConditioningRequired);
 
