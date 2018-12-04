@@ -1,20 +1,5 @@
 package com.asos.carrental.expense.service.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import com.asos.carrental.creators.VehicleBuilder;
 import com.asos.carrental.creators.VehicleDirector;
 import com.asos.carrental.model.FuelType;
@@ -24,6 +9,19 @@ import com.asos.carrental.model.VehicleType;
 import com.asos.carrental.utils.calculators.DistanceCalculator;
 import com.asos.carrental.utils.calculators.ExpenseCalculator;
 import com.asos.carrental.utils.calculators.RateCalculator;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CarRentalExpenseCalculatorImplTest {
@@ -34,6 +32,7 @@ public class CarRentalExpenseCalculatorImplTest {
 	private static final String DESTINATION_MUMBAI = "Mumbai";
 	private static final String FUEL_TYPE_PETROL = "petrol";
 	private static final String VEHICLE_TYPE_CAR = "car";
+
 	@Mock
 	private VehicleDirector vehicleDirector;
 	@Mock
@@ -67,135 +66,84 @@ public class CarRentalExpenseCalculatorImplTest {
 
 	@Test
 	public void shouldCalculateTotalExpense() {
-
 		// given
-		when(vehicleDirector.buildVehicle(VEHICLE_TYPE_CAR, FUEL_TYPE_PETROL,
-				AIR_COND_REQUIRED_TRUE)).thenReturn(swift);
-		when(distanceCalculator.getTotalDistance(DESTINATION_MUMBAI, TRIP_TYPE_RETURN))
-				.thenReturn(distanceToMumbaiAndBack);
-		when(finalRateCalculator.calulateRate(swift)).thenReturn(rateForSwift);
-		when(expenseCalculator.calculateExpense(swift, TRAVELLER_COUNT_FOUR,
-				distanceToMumbaiAndBack, rateForSwift))
-						.thenReturn(tripExpenseToMumbaiInASwift);
+		givenTripInSwiftToMumbai();
 
 		// when
-		BigDecimal calculatedExpense = carRentalExpenseCalculatorImplUnderTest
-				.calculateExpense(VEHICLE_TYPE_CAR, FUEL_TYPE_PETROL, DESTINATION_MUMBAI, TRIP_TYPE_RETURN,
-						TRAVELLER_COUNT_FOUR, AIR_COND_REQUIRED_TRUE);
+		BigDecimal calculatedExpense = whenCalculateExpenseInSwiftToMubai();
 
 		// then
-		BigDecimal assertedExpense = tripExpenseToMumbaiInASwift;
-		assertThat(calculatedExpense, equalTo(assertedExpense));
-
+		assertThat(calculatedExpense, equalTo(tripExpenseToMumbaiInASwift));
 	}
 
 	@Test
 	public void shouldVerifyVehicleBuilderParameters() {
 
 		// given
-
-		ArgumentCaptor<String> vehicleTypeCaptor = ArgumentCaptor
-				.forClass(String.class);
-		ArgumentCaptor<String> fuelTypeCaptor = ArgumentCaptor
-				.forClass(String.class);
-		ArgumentCaptor<String> airConRequiredCaptor = ArgumentCaptor
-				.forClass(String.class);
+		givenTripInSwiftToMumbai();
 
 		// when
-		carRentalExpenseCalculatorImplUnderTest.calculateExpense(VEHICLE_TYPE_CAR,
-				FUEL_TYPE_PETROL, DESTINATION_MUMBAI, TRIP_TYPE_RETURN, TRAVELLER_COUNT_FOUR,
-				AIR_COND_REQUIRED_TRUE);
+		whenCalculateExpenseInSwiftToMubai();
 
 		// then
-		verify(vehicleDirector).buildVehicle(vehicleTypeCaptor.capture(),
-				fuelTypeCaptor.capture(), airConRequiredCaptor.capture());
-
-		assertThat(vehicleTypeCaptor.getValue(), equalTo(VEHICLE_TYPE_CAR));
-		assertThat(fuelTypeCaptor.getValue(), equalTo(FUEL_TYPE_PETROL));
-		assertThat(airConRequiredCaptor.getValue(),
-				equalTo(AIR_COND_REQUIRED_TRUE));
-
+		verify(vehicleDirector).buildVehicle(VEHICLE_TYPE_CAR, FUEL_TYPE_PETROL, AIR_COND_REQUIRED_TRUE);
 	}
 
 	@Test
 	public void shouldVerifyDistanceCalculatorParameters() {
 		// given
-		ArgumentCaptor<String> destinationCaptor = ArgumentCaptor
-				.forClass(String.class);
-		ArgumentCaptor<String> tripTypeCaptor = ArgumentCaptor
-				.forClass(String.class);
+		givenTripInSwiftToMumbai();
 
 		// when
-		carRentalExpenseCalculatorImplUnderTest.calculateExpense(VEHICLE_TYPE_CAR,
-				FUEL_TYPE_PETROL, DESTINATION_MUMBAI, TRIP_TYPE_RETURN, TRAVELLER_COUNT_FOUR,
-				AIR_COND_REQUIRED_TRUE);
+		whenCalculateExpenseInSwiftToMubai();
 
 		// then
 
-		verify(distanceCalculator).getTotalDistance(destinationCaptor.capture(),
-				tripTypeCaptor.capture());
-
-		assertThat(destinationCaptor.getValue(), equalTo(DESTINATION_MUMBAI));
-		assertThat(tripTypeCaptor.getValue(), equalTo(TRIP_TYPE_RETURN));
-
+		verify(distanceCalculator).getTotalDistance(DESTINATION_MUMBAI, TRIP_TYPE_RETURN);
 	}
 
 	@Test
 	public void shouldVerifyRateCalculatorParameters() {
 		// given
-		ArgumentCaptor<Vehicle> vehicleCaptor = ArgumentCaptor
-				.forClass(Vehicle.class);
-
-		when(vehicleDirector.buildVehicle(VEHICLE_TYPE_CAR, FUEL_TYPE_PETROL,
-				AIR_COND_REQUIRED_TRUE)).thenReturn(swift);
+		givenTripInSwiftToMumbai();
 
 		// when
-		carRentalExpenseCalculatorImplUnderTest.calculateExpense(VEHICLE_TYPE_CAR,
-				FUEL_TYPE_PETROL, DESTINATION_MUMBAI, TRIP_TYPE_RETURN, TRAVELLER_COUNT_FOUR,
-				AIR_COND_REQUIRED_TRUE);
+		whenCalculateExpenseInSwiftToMubai();
 
 		// then
-
-		verify(finalRateCalculator).calulateRate(vehicleCaptor.capture());
-		assertThat(vehicleCaptor.getValue(), equalTo(swift));
-
+		verify(finalRateCalculator).calulateRate(swift);
 	}
 
 	@Test
 	public void shouldVerifyExpenseCalculatorParameters() {
 		// given
-		ArgumentCaptor<Vehicle> vehicleCaptor = ArgumentCaptor
-				.forClass(Vehicle.class);
-		ArgumentCaptor<String> travellerCountCaptor = ArgumentCaptor
-				.forClass(String.class);
-		ArgumentCaptor<Float> distanceCaptor = ArgumentCaptor
-				.forClass(Float.class);
-		ArgumentCaptor<BigDecimal> vehicleRateCaptor = ArgumentCaptor
-				.forClass(BigDecimal.class);
+		givenTripInSwiftToMumbai();
 
+		// when
+		whenCalculateExpenseInSwiftToMubai();
+
+		// then
+		verify(expenseCalculator).calculateExpense(swift, TRAVELLER_COUNT_FOUR, distanceToMumbaiAndBack, rateForSwift);
+	}
+
+	private void givenTripInSwiftToMumbai() {
 		when(vehicleDirector.buildVehicle(VEHICLE_TYPE_CAR, FUEL_TYPE_PETROL,
 				AIR_COND_REQUIRED_TRUE)).thenReturn(swift);
 		when(distanceCalculator.getTotalDistance(DESTINATION_MUMBAI, TRIP_TYPE_RETURN))
 				.thenReturn(distanceToMumbaiAndBack);
 		when(finalRateCalculator.calulateRate(swift)).thenReturn(rateForSwift);
 
-		// when
-		carRentalExpenseCalculatorImplUnderTest.calculateExpense(VEHICLE_TYPE_CAR,
-				FUEL_TYPE_PETROL, DESTINATION_MUMBAI, TRIP_TYPE_RETURN, TRAVELLER_COUNT_FOUR,
+		when(expenseCalculator.calculateExpense(swift, TRAVELLER_COUNT_FOUR, distanceToMumbaiAndBack, rateForSwift)).thenReturn(tripExpenseToMumbaiInASwift);
+	}
+
+	private BigDecimal whenCalculateExpenseInSwiftToMubai() {
+		return carRentalExpenseCalculatorImplUnderTest.calculateExpense(
+				VEHICLE_TYPE_CAR,
+				FUEL_TYPE_PETROL,
+				DESTINATION_MUMBAI,
+				TRIP_TYPE_RETURN,
+				TRAVELLER_COUNT_FOUR,
 				AIR_COND_REQUIRED_TRUE);
-
-		// then
-
-		verify(expenseCalculator).calculateExpense(vehicleCaptor.capture(),
-				travellerCountCaptor.capture(), distanceCaptor.capture(),
-				vehicleRateCaptor.capture());
-
-		assertThat(vehicleCaptor.getValue(), equalTo(swift));
-		assertThat(travellerCountCaptor.getValue(),
-				equalTo(TRAVELLER_COUNT_FOUR));
-		assertThat(distanceCaptor.getValue(), equalTo(distanceToMumbaiAndBack));
-		assertThat(vehicleRateCaptor.getValue(), equalTo(rateForSwift));
-
 	}
 
 }
