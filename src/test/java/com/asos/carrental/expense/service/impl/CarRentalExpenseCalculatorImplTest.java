@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -42,14 +43,9 @@ public class CarRentalExpenseCalculatorImplTest {
 	@Mock
 	private ExpenseCalculator expenseCalculator;
 
+	@InjectMocks
 	CarRentalExpenseCalculatorImpl carRentalExpenseCalculatorImplUnderTest;
 
-	String vehicleType;
-	String fuelType;
-	String destination;
-	String tripType;
-	String numberOfPeopleTravelling;
-	String isAirConditioningRequired;
 	private Vehicle swift;
 	private Float distanceToMumbaiAndBack;
 	private BigDecimal rateForSwift;
@@ -57,21 +53,13 @@ public class CarRentalExpenseCalculatorImplTest {
 
 	@Before
 	public void setup() {
-		carRentalExpenseCalculatorImplUnderTest = new CarRentalExpenseCalculatorImpl(
-				vehicleDirector, distanceCalculator, finalRateCalculator,
-				expenseCalculator);
-
-		vehicleType = VEHICLE_TYPE_CAR;
-		fuelType = FUEL_TYPE_PETROL;
-		destination = DESTINATION_MUMBAI;
-		tripType = TRIP_TYPE_RETURN;
-		numberOfPeopleTravelling = TRAVELLER_COUNT_FOUR;
-		isAirConditioningRequired = AIR_COND_REQUIRED_TRUE;
-
 		swift = new VehicleBuilder().withFuelType(FuelType.PETROL)
-				.withVehicleType(VehicleType.CAR).withIsAirConditioned(true)
-				.withMaxPassengerCapacity(4).withVehicleSize(VehicleSize.SMALL)
+				.withVehicleType(VehicleType.CAR)
+				.withIsAirConditioned(true)
+				.withMaxPassengerCapacity(4)
+				.withVehicleSize(VehicleSize.SMALL)
 				.build();
+
 		distanceToMumbaiAndBack = new Float("400");
 		rateForSwift = new BigDecimal("15.00");
 		tripExpenseToMumbaiInASwift = new BigDecimal("6000.00");
@@ -81,19 +69,19 @@ public class CarRentalExpenseCalculatorImplTest {
 	public void shouldCalculateTotalExpense() {
 
 		// given
-		when(vehicleDirector.buildVehicle(vehicleType, fuelType,
-				isAirConditioningRequired)).thenReturn(swift);
-		when(distanceCalculator.getTotalDistance(destination, tripType))
+		when(vehicleDirector.buildVehicle(VEHICLE_TYPE_CAR, FUEL_TYPE_PETROL,
+				AIR_COND_REQUIRED_TRUE)).thenReturn(swift);
+		when(distanceCalculator.getTotalDistance(DESTINATION_MUMBAI, TRIP_TYPE_RETURN))
 				.thenReturn(distanceToMumbaiAndBack);
 		when(finalRateCalculator.calulateRate(swift)).thenReturn(rateForSwift);
-		when(expenseCalculator.calculateExpense(swift, numberOfPeopleTravelling,
+		when(expenseCalculator.calculateExpense(swift, TRAVELLER_COUNT_FOUR,
 				distanceToMumbaiAndBack, rateForSwift))
 						.thenReturn(tripExpenseToMumbaiInASwift);
 
 		// when
 		BigDecimal calculatedExpense = carRentalExpenseCalculatorImplUnderTest
-				.calculateExpense(vehicleType, fuelType, destination, tripType,
-						numberOfPeopleTravelling, isAirConditioningRequired);
+				.calculateExpense(VEHICLE_TYPE_CAR, FUEL_TYPE_PETROL, DESTINATION_MUMBAI, TRIP_TYPE_RETURN,
+						TRAVELLER_COUNT_FOUR, AIR_COND_REQUIRED_TRUE);
 
 		// then
 		BigDecimal assertedExpense = tripExpenseToMumbaiInASwift;
@@ -114,9 +102,9 @@ public class CarRentalExpenseCalculatorImplTest {
 				.forClass(String.class);
 
 		// when
-		carRentalExpenseCalculatorImplUnderTest.calculateExpense(vehicleType,
-				fuelType, destination, tripType, numberOfPeopleTravelling,
-				isAirConditioningRequired);
+		carRentalExpenseCalculatorImplUnderTest.calculateExpense(VEHICLE_TYPE_CAR,
+				FUEL_TYPE_PETROL, DESTINATION_MUMBAI, TRIP_TYPE_RETURN, TRAVELLER_COUNT_FOUR,
+				AIR_COND_REQUIRED_TRUE);
 
 		// then
 		verify(vehicleDirector).buildVehicle(vehicleTypeCaptor.capture(),
@@ -138,9 +126,9 @@ public class CarRentalExpenseCalculatorImplTest {
 				.forClass(String.class);
 
 		// when
-		carRentalExpenseCalculatorImplUnderTest.calculateExpense(vehicleType,
-				fuelType, destination, tripType, numberOfPeopleTravelling,
-				isAirConditioningRequired);
+		carRentalExpenseCalculatorImplUnderTest.calculateExpense(VEHICLE_TYPE_CAR,
+				FUEL_TYPE_PETROL, DESTINATION_MUMBAI, TRIP_TYPE_RETURN, TRAVELLER_COUNT_FOUR,
+				AIR_COND_REQUIRED_TRUE);
 
 		// then
 
@@ -158,13 +146,13 @@ public class CarRentalExpenseCalculatorImplTest {
 		ArgumentCaptor<Vehicle> vehicleCaptor = ArgumentCaptor
 				.forClass(Vehicle.class);
 
-		when(vehicleDirector.buildVehicle(vehicleType, fuelType,
-				isAirConditioningRequired)).thenReturn(swift);
+		when(vehicleDirector.buildVehicle(VEHICLE_TYPE_CAR, FUEL_TYPE_PETROL,
+				AIR_COND_REQUIRED_TRUE)).thenReturn(swift);
 
 		// when
-		carRentalExpenseCalculatorImplUnderTest.calculateExpense(vehicleType,
-				fuelType, destination, tripType, numberOfPeopleTravelling,
-				isAirConditioningRequired);
+		carRentalExpenseCalculatorImplUnderTest.calculateExpense(VEHICLE_TYPE_CAR,
+				FUEL_TYPE_PETROL, DESTINATION_MUMBAI, TRIP_TYPE_RETURN, TRAVELLER_COUNT_FOUR,
+				AIR_COND_REQUIRED_TRUE);
 
 		// then
 
@@ -185,16 +173,16 @@ public class CarRentalExpenseCalculatorImplTest {
 		ArgumentCaptor<BigDecimal> vehicleRateCaptor = ArgumentCaptor
 				.forClass(BigDecimal.class);
 
-		when(vehicleDirector.buildVehicle(vehicleType, fuelType,
-				isAirConditioningRequired)).thenReturn(swift);
-		when(distanceCalculator.getTotalDistance(destination, tripType))
+		when(vehicleDirector.buildVehicle(VEHICLE_TYPE_CAR, FUEL_TYPE_PETROL,
+				AIR_COND_REQUIRED_TRUE)).thenReturn(swift);
+		when(distanceCalculator.getTotalDistance(DESTINATION_MUMBAI, TRIP_TYPE_RETURN))
 				.thenReturn(distanceToMumbaiAndBack);
 		when(finalRateCalculator.calulateRate(swift)).thenReturn(rateForSwift);
 
 		// when
-		carRentalExpenseCalculatorImplUnderTest.calculateExpense(vehicleType,
-				fuelType, destination, tripType, numberOfPeopleTravelling,
-				isAirConditioningRequired);
+		carRentalExpenseCalculatorImplUnderTest.calculateExpense(VEHICLE_TYPE_CAR,
+				FUEL_TYPE_PETROL, DESTINATION_MUMBAI, TRIP_TYPE_RETURN, TRAVELLER_COUNT_FOUR,
+				AIR_COND_REQUIRED_TRUE);
 
 		// then
 
