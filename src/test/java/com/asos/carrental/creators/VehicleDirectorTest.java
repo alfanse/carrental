@@ -1,20 +1,19 @@
 package com.asos.carrental.creators;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import com.asos.carrental.model.FuelType;
 import com.asos.carrental.model.Vehicle;
 import com.asos.carrental.model.VehicleSize;
 import com.asos.carrental.model.VehicleType;
 import com.asos.carrental.repository.VehicleRepository;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class VehicleDirectorTest {
@@ -22,18 +21,13 @@ public class VehicleDirectorTest {
     @Mock
     private VehicleRepository vehicleRepository;
 
+    @InjectMocks
     VehicleDirector vehicleDirector;
 
-    protected static final String VEHICLE_BUS = "bus";
-    protected static final String FUEL_TYPE_DEISEL = "DEISEL";
-    protected static final String AC_REQUIRED = "true";
-    protected static final VehicleType VEHICLE_TYPE_BUS = VehicleType.BUS;
-
-    @Before
-    public void setup() {
-        vehicleDirector = new VehicleDirector(vehicleRepository);
-
-    }
+    private static final String VEHICLE_BUS = "bus";
+    private static final String FUEL_TYPE_DEISEL = "DEISEL";
+    private static final String AC_REQUIRED = "true";
+    private static final VehicleType VEHICLE_TYPE_BUS = VehicleType.BUS;
 
     @Test
     public void shouldBuildVehilcleWithFuelType() {
@@ -107,7 +101,7 @@ public class VehicleDirectorTest {
 
     private void givenABus() {
         when(vehicleRepository.fectchAirCoditioningAvailibity(VehicleDirectorTest.VEHICLE_TYPE_BUS, VehicleDirectorTest.AC_REQUIRED))
-                .thenReturn(new Boolean(true));
+                .thenReturn(Boolean.TRUE);
         when(vehicleRepository.fetchFuelType(VehicleDirectorTest.VEHICLE_TYPE_BUS, VehicleDirectorTest.FUEL_TYPE_DEISEL)).thenReturn(FuelType.DEISEL);
         when(vehicleRepository.fetchVehiclePassengerCapacity(VehicleDirectorTest.VEHICLE_TYPE_BUS)).thenReturn(20);
         when(vehicleRepository.fetchVehicleSize(VehicleDirectorTest.VEHICLE_TYPE_BUS)).thenReturn(VehicleSize.LARGE);
